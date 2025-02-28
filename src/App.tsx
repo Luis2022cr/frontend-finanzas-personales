@@ -1,10 +1,11 @@
-import FinanceTracker from "./components/dashboard";
+
+import Login from "./pages/login";
 
 
 export default function App() {
   return (
     <>
-        <FinanceTracker/>
+        <Login/>
     </>
   )
 }

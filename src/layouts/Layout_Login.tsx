@@ -6,7 +6,7 @@ export default function Layout_Login(){
       {/* <Header_login /> */}
       <main className="flex">
         {/* <Sidebar /> */}
-        <div className='ml-0 md:ml-40 w-full'>
+        <div className='ml-0 w-full'>
         <Outlet />
 
         </div>

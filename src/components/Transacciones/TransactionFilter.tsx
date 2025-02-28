@@ -23,8 +23,8 @@ export default function TransactionFilter({ filter, setFilter, accounts }: Filte
             className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white"
           >
             <option value="all">Todos</option>
-            <option value="income">Ingresos</option>
-            <option value="expense">Gastos</option>
+            <option value="ingresos">Ingresos</option>
+            <option value="gastos">Gastos</option>
           </select>
         </div>
         <div>

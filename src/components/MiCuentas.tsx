@@ -1,47 +1,70 @@
-import { useState, useRef } from "react";
+import { useState, ChangeEvent } from "react";
 import { PlusCircle, Trash2, CreditCard, X } from "lucide-react";
 import { Dialog } from "@headlessui/react";
+import Loading_Artifys from "./Loading_artifys";
+import { ObtenerCuentas } from "@/api/servicios/cuentas";
+import axiosInstance from "@/api/axiosInstance";
 
-type BankAccount = {
-  id: string;
+type Bankcuenta = {
   name: string;
   balance: number;
-  accountNumber: string;
+  cuentaNumber: string;
   image?: string;
 };
 
 export default function Micuenta() {
-  const [accounts, setAccounts] = useState<BankAccount[]>([
-    { id: "1", name: "Cuenta Principal", balance: 5000, accountNumber: "1234-5678-9012-3456", image: "/placeholder.svg?height=100&width=100" },
-    { id: "2", name: "Ahorros", balance: 10000, accountNumber: "9876-5432-1098-7654", image: "/placeholder.svg?height=100&width=100" },
-  ]);
-
-  const [newAccount, setNewAccount] = useState<Omit<BankAccount, "id">>({ name: "", balance: 0, accountNumber: "" });
+  const [{ data: cuentas, loading: loadingcuentas }] = ObtenerCuentas();
+  
+  const [newcuenta, setNewcuenta] = useState<Bankcuenta>({ name: "", balance: 0, cuentaNumber: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const accountImageInputRef = useRef<HTMLInputElement>(null);
+  const [imagen, setImagen] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);  // Estado para manejar el loading del botón
 
-  const handleImageUpload = (file: File, callback: (dataUrl: string) => void) => {
-    const reader = new FileReader();
-    reader.onloadend = () => callback(reader.result as string);
-    reader.readAsDataURL(file);
-  };
-
-  const handleAddAccount = () => {
-    if (!newAccount.name || newAccount.balance < 0) {
-      alert("Por favor ingresa un nombre y un saldo válido");
+  const handleAddcuenta = async () => {
+    if (!newcuenta.name || newcuenta.balance < 0 || !newcuenta.cuentaNumber || !imagen) {
+      alert("Por favor ingresa un nombre, número de cuenta y un saldo válido");
       return;
     }
-    const accountId = Date.now().toString();
-    setAccounts([...accounts, { id: accountId, ...newAccount }]);
-    setNewAccount({ name: "", balance: 0, accountNumber: "" });
-    if (accountImageInputRef.current) accountImageInputRef.current.value = "";
-    setIsModalOpen(false);
+
+    const formData = new FormData();
+    formData.append("nombre", newcuenta.name);
+    formData.append("saldo", newcuenta.balance.toString());
+    formData.append("numero_cuenta", newcuenta.cuentaNumber);
+    formData.append("file", imagen);
+
+    setIsLoading(true); // Activar el loading cuando inicie el proceso
+
+    try {
+      // Enviar la solicitud a la API para crear la cuenta
+      await axiosInstance.post("/cuentas", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      alert("Cuenta creada exitosamente");
+      setNewcuenta({ name: "", balance: 0, cuentaNumber: "" });
+      setIsModalOpen(false);
+      window.location.reload(); // Recargar la página después de enviar el formulario
+    } catch (error) {
+      console.error("Error al crear la cuenta:", error);
+      alert("Hubo un error al crear la cuenta");
+    } finally {
+      setIsLoading(false); // Desactivar el loading una vez finalice el proceso
+    }
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setImagen(file);
   };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     alert("Número de cuenta copiado al portapapeles");
   };
+
+  if (loadingcuentas) return <Loading_Artifys />;
+  if (!cuentas) return <div>No se encontraron productos.</div>;
 
   return (
     <>
@@ -54,20 +77,20 @@ export default function Micuenta() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {accounts.map((account) => (
-            <div key={account.id} className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-lg shadow-lg p-5 border-l-4 border-cyan-400 transform hover:scale-105">
+          {cuentas.map((cuenta) => (
+            <div key={cuenta.id} className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-lg shadow-lg p-5 border-l-4 border-cyan-400 transform hover:scale-105">
               <div className="flex justify-between items-start">
                 <div className="flex items-center">
-                  {account.image && <img src={account.image} alt={account.name} className="w-12 h-12 rounded-full mr-3 object-cover" />}
+                  {cuenta.imagen && <img src={cuenta.imagen} alt={cuenta.nombre} className="w-12 h-12 rounded-full mr-3 object-cover" />}
                   <div>
-                    <h3 className="font-semibold text-lg text-white">{account.name}</h3>
+                    <h3 className="font-semibold text-lg text-white">{cuenta.nombre}</h3>
                     <div className="flex items-center mt-1 mb-2">
-                      <p className="text-sm text-cyan-200 mr-2">{account.accountNumber}</p>
-                      <button onClick={() => copyToClipboard(account.accountNumber)} className="text-cyan-200 hover:text-white">
+                      <p className="text-sm text-cyan-200 mr-2">{cuenta.numero_cuenta}</p>
+                      <button onClick={() => copyToClipboard(cuenta.numero_cuenta)} className="text-cyan-200 hover:text-white">
                         <CreditCard size={14} />
                       </button>
                     </div>
-                    <p className="text-2xl font-bold text-white mt-2">${account.balance.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-white mt-2">L. {cuenta.saldo.toLocaleString()}</p>
                   </div>
                 </div>
                 <button className="text-indigo-200 hover:text-red-300">
@@ -87,15 +110,16 @@ export default function Micuenta() {
           </button>
           <h3 className="text-lg font-semibold text-white mb-4">Agregar Nueva Cuenta</h3>
           <div className="space-y-4">
-            <input type="text" placeholder="Nombre" value={newAccount.name} onChange={(e) => setNewAccount({ ...newAccount, name: e.target.value })} className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white" />
-            <input type="text" placeholder="Número de Cuenta" value={newAccount.accountNumber} onChange={(e) => setNewAccount({ ...newAccount, accountNumber: e.target.value })} className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white" />
-            <input type="number" placeholder="Saldo Inicial" value={newAccount.balance} onChange={(e) => setNewAccount({ ...newAccount, balance: Number(e.target.value) })} className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white" />
-            <input type="file" accept="image/*" ref={accountImageInputRef} onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) handleImageUpload(file, (dataUrl) => setNewAccount({ ...newAccount, image: dataUrl }));
-            }} className="w-full px-4 py-2 text-white file:bg-pink-500 file:text-white file:rounded-md" />
-            <button onClick={handleAddAccount} className="w-full py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-md hover:from-pink-600 hover:to-purple-700">
-              Agregar Cuenta
+            <input type="text" placeholder="Nombre" value={newcuenta.name} onChange={(e) => setNewcuenta({ ...newcuenta, name: e.target.value })} className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white" />
+            <input type="text" placeholder="Número de Cuenta" value={newcuenta.cuentaNumber} onChange={(e) => setNewcuenta({ ...newcuenta, cuentaNumber: e.target.value })} className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white" />
+            <input type="number" placeholder="Saldo Inicial" value={newcuenta.balance} onChange={(e) => setNewcuenta({ ...newcuenta, balance: Number(e.target.value) })} className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white" />
+            <input type="file" accept="image/*" onChange={handleFileChange} className="w-full px-4 py-2 text-white file:bg-pink-500 file:text-white file:rounded-md" />
+            <button 
+              onClick={handleAddcuenta} 
+              className={`w-full py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-md hover:from-pink-600 hover:to-purple-700 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+              disabled={isLoading} // Deshabilitar el botón mientras esté cargando
+            >
+              {isLoading ? "Cargando..." : "Agregar Cuenta"} {/* Mostrar "Cargando..." mientras se envía */}
             </button>
           </div>
         </div>

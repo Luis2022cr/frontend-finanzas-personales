@@ -4,12 +4,14 @@ import App from './App';
 import './index.css';
 import Layout from './layouts/Layout';
 import Layout_Login from './layouts/Layout_Login';
+import { AuthProvider } from './api/AuthContext';
+import Dashboard from './pages/Dashboard';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
   <>
-    {/* <AuthProvider> */}
+    <AuthProvider>
 
       <BrowserRouter>
         <Routes>
@@ -20,27 +22,11 @@ root.render(
 
           {/* Rutas que utilizan el Layout de Login= segundo Layout*/}
           <Route path="/" element={<Layout_Login />}>
-            {/* Autenticacion para un dashboard */}
-
-            {/* <Route path="/" element={<EstudianteRoute />}>
-          
-            </Route> */}
-
-            {/* Autenticacion para un dashboard */}
-
-            {/* <Route path="/" element={<CoordinadoresAuth />}>
-            
-            </Route> */}
-
-            {/* Autenticacion para un dashboard */}
-
-            {/* <Route path="/" element={<VoaeAuth />}>
-              <Route path="dashboard-voae/main" element={<DashboardAdminVoae />} />
-            </Route> */}
+            <Route path="dashboard/main" element={<Dashboard />} />
           </Route>
 
         </Routes>
       </BrowserRouter>
-    {/* </AuthProvider> */}
+    </AuthProvider>
   </>
 );
