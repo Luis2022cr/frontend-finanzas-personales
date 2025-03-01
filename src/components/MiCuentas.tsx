@@ -70,9 +70,10 @@ export default function Micuenta() {
     <>
       <section className="mb-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500">Mis Cuentas</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500">Mis Cuentas</h2>
           <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-md flex items-center shadow-lg">
-            <PlusCircle size={18} className="mr-2" /> Agregar Cuenta
+            <PlusCircle size={18} className="mr-2" /> 
+            <span className="text-xs md:text-base"> Agregar Cuenta </span>
           </button>
         </div>
 
