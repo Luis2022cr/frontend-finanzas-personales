@@ -6,6 +6,7 @@ import Layout from './layouts/Layout';
 import Layout_Login from './layouts/Layout_Login';
 import { AuthProvider } from './api/AuthContext';
 import Dashboard from './pages/Dashboard';
+import DashboardCripto from './components/crypto-futuros/dashbard-cripto-futuros';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -23,6 +24,7 @@ root.render(
           {/* Rutas que utilizan el Layout de Login= segundo Layout*/}
           <Route path="/" element={<Layout_Login />}>
             <Route path="dashboard/main" element={<Dashboard />} />
+            <Route path="dashboard-futuros" element={<DashboardCripto />} />
           </Route>
 
         </Routes>
