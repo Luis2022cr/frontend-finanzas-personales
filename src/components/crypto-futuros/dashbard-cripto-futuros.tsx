@@ -13,7 +13,7 @@ export default function DashboardCripto() {
 
     return (
         <>
-            <div className="mb-8 bg-gradient-to-r from-gray-800 to-indigo-900 mt-5 ">
+            <div className="mb-8 bg-gradient-to-r from-gray-800 to-indigo-900 mt-5 p-4 ">
                 <div className="grid grid-col-3 md:flex justify-between items-center mb-4 gap-2 mx-5">
                     <h2 className="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 md:mb-4">
                         Dashboard Cripto
@@ -22,7 +22,7 @@ export default function DashboardCripto() {
                 </div>
 
 
-                <div className="bg-gradient-to-r from-gray-800 to-indigo-900 rounded-lg shadow-lg p-6 flex flex-col md:flex-row justify-between items-center border border-indigo-700">
+                <div className="bg-gradient-to-r mb-10 from-gray-800 to-indigo-900 rounded-lg shadow-lg p-6 flex flex-col md:flex-row justify-between items-center border border-indigo-700">
                     <div>
                         <p className="text-indigo-300 mb-1">Balance Total</p>
                         <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-yellow-500">
@@ -71,23 +71,23 @@ export default function DashboardCripto() {
                 </div>
 
 
-                <div className="overflow-x-auto">
+                <div className="rounded rounded-3xl overflow-x-auto bg-gradient-to-r from-indigo-950 via-purple-950 to-indigo-950">
                     <table className="min-w-full table-auto border-collapse border border-gray-700">
                         <thead className="bg-indigo-800">
                             <tr>
-                                <th className="border border-gray-700 px-4 py-2 text-indigo-300">Fecha</th>
-                                <th className="border border-gray-700 px-4 py-2 text-indigo-300">Balance Final</th>
-                                <th className="border border-gray-700 px-4 py-2 text-indigo-300">PNL Diario</th>
+                                <th className="border border-gray-900 px-4 py-2 text-indigo-200">Fecha</th>
+                                <th className="border border-gray-900 px-4 py-2 text-indigo-200">Balance Final</th>
+                                <th className="border border-gray-900 px-4 py-2 text-indigo-200">PNL Diario</th>
                             </tr>
                         </thead>
                         <tbody>
                             {balanceDia.map((balance, index) => (
-                                <tr key={index} className="bg-gray-800 hover:bg-gray-700 transition duration-200">
-                                    <td className="border border-gray-700 px-4 py-2 text-center text-gray-300">{balance.fecha}</td>
-                                    <td className="border border-gray-700 px-4 py-2 text-center text-green-400 font-bold">
+                                <tr key={index} className=" transition duration-200 hover:bg-indigo-700">
+                                    <td className="border border-gray-900 px-4 py-2 text-center text-gray-300">{balance.fecha}</td>
+                                    <td className="border border-gray-900 px-4 py-2 text-center text-green-400 font-bold">
                                         ${balance.balance_final.toFixed(2)}
                                     </td>
-                                    <td className={`border border-gray-700 px-4 py-2 text-center font-bold ${balance.pnl_dia >= 0 ? "text-green-400" : "text-red-400"}`}>
+                                    <td className={`border border-gray-900 px-4 py-2 text-center font-bold ${balance.pnl_dia >= 0 ? "text-green-400" : "text-red-400"}`}>
                                         ${balance.pnl_dia.toFixed(2)}
                                     </td>
                                 </tr>
