@@ -60,7 +60,7 @@ export default function TransactionTable() {
                 </tr>
               ) : (
                 filteredTransactions.map(transaction => (
-                  <tr key={transaction.id}>
+                  <tr key={transaction.id} className="hover:bg-indigo-700">
                     <td className="px-4 py-4">{new Date(transaction.fecha).toLocaleDateString()}</td>
                     <td className="px-4 py-4">{transaction.descripcion}</td>
                     <td className="px-4 py-4">{transaction.cuenta_nombre}</td>

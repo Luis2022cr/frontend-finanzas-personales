@@ -12,15 +12,14 @@ type Transaction = {
   amount: number
   description: string
   type: TransactionType
-  date: string
   bankAccountId: string
   receiptImage?: string
 }
 
 
 export default function TransactionForm() {
-    const [{ data: cuentas, loading: loadingcuentas }] = ObtenerCuentas();
-  
+  const [{ data: cuentas, loading: loadingcuentas }] = ObtenerCuentas();
+
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -28,7 +27,6 @@ export default function TransactionForm() {
     amount: 0,
     description: "",
     type: "gastos",
-    date: new Date().toISOString().split("T")[0],
     bankAccountId: "1",
     receiptImage: ""
   })
@@ -45,7 +43,7 @@ export default function TransactionForm() {
   }
 
   const handleSubmit = async () => {
-    if (!newTransaction.amount || !newTransaction.description || !newTransaction.date || !newTransaction.bankAccountId) {
+    if (!newTransaction.amount || !newTransaction.description || !newTransaction.bankAccountId) {
       alert("Por favor completa todos los campos obligatorios")
       return
     }
@@ -54,7 +52,6 @@ export default function TransactionForm() {
     formData.append("monto", newTransaction.amount.toString())
     formData.append("descripcion", newTransaction.description)
     formData.append("tipo", newTransaction.type)
-    formData.append("fecha", newTransaction.date)
     formData.append("cuenta_id", newTransaction.bankAccountId)
     if (receiptImage) {
       formData.append("file", receiptImage)
@@ -74,7 +71,6 @@ export default function TransactionForm() {
         amount: 0,
         description: "",
         type: "gastos",
-        date: new Date().toISOString().split("T")[0],
         bankAccountId: "1",
         receiptImage: "",
       })
@@ -91,7 +87,7 @@ export default function TransactionForm() {
   if (loadingcuentas) return <Loading_Artifys />;
   if (!cuentas) return <div>No se encontraron productos.</div>;
 
-  
+
   return (
     <>
       <button
@@ -139,16 +135,7 @@ export default function TransactionForm() {
                     min="0"
                   />
                 </div>
-                {/* Fecha */}
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1">Fecha</label>
-                  <input
-                    type="date"
-                    value={newTransaction.date}
-                    onChange={(e) => setNewTransaction({ ...newTransaction, date: e.target.value })}
-                    className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white"
-                  />
-                </div>
+               
                 {/* Recibo */}
                 <div>
                   <label className="block text-sm font-medium text-white mb-1">Recibo (opcional)</label>
@@ -168,10 +155,10 @@ export default function TransactionForm() {
                     onChange={(e) => setNewTransaction({ ...newTransaction, bankAccountId: e.target.value })}
                     className="w-full px-4 py-2 border border-indigo-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 bg-indigo-900/30 text-white"
                   >
+                    <option value="">Ingrese una Cuenta</option>
                     {cuentas.map((account) => (
-                      <option key={account.id} value={account.id}>
-                        {account.nombre}
-                      </option>
+
+                      <option key={account.id} value={account.id}>{account.nombre}</option>
                     ))}
                   </select>
                 </div>

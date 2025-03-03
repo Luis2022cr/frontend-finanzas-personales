@@ -7,6 +7,7 @@ import Layout_Login from './layouts/Layout_Login';
 import { AuthProvider } from './api/AuthContext';
 import Dashboard from './pages/Dashboard';
 import DashboardCripto from './components/crypto-futuros/dashbard-cripto-futuros';
+import DebtList from './components/deudas/deudas';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -25,6 +26,7 @@ root.render(
           <Route path="/" element={<Layout_Login />}>
             <Route path="dashboard/main" element={<Dashboard />} />
             <Route path="dashboard-futuros" element={<DashboardCripto />} />
+            <Route path="dashboard-deudas" element={<DebtList />} />
           </Route>
 
         </Routes>

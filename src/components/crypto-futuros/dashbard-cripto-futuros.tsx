@@ -71,7 +71,7 @@ export default function DashboardCripto() {
                 </div>
 
 
-                <div className="rounded rounded-3xl overflow-x-auto bg-gradient-to-r from-indigo-950 via-purple-950 to-indigo-950">
+                <div className=" rounded-3xl overflow-x-auto bg-gradient-to-r from-indigo-950 via-purple-950 to-indigo-950">
                     <table className="min-w-full table-auto border-collapse border border-gray-700">
                         <thead className="bg-indigo-800">
                             <tr>
