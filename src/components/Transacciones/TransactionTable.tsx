@@ -72,7 +72,7 @@ export default function TransactionTable() {
                       </span>
                     </td>
                     <td className={`px-4 py-4 font-medium ${transaction.tipo === "ingresos" ? "text-cyan-400" : "text-pink-400"}`}>
-                      ${transaction.monto.toLocaleString()}
+                      L. {transaction.monto.toLocaleString()}
                     </td>
                     <td className="px-4 py-4">
                       {transaction.recibo ? (

@@ -1,7 +1,14 @@
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { ObtenerBalanceCripto, TransaccionesPorDiaCripto } from "@/api/servicios/cypto";
 import Loading_Artifys from "../Loading_artifys";
 import RegistrarBalanceDiario from "./form-balance";
 
+// Definir el tipo para los datos
+interface Balance {
+    fecha: string; // Formato "YYYY-MM-DD"
+    balance_final: number;
+    pnl_dia: number;
+}
 
 export default function DashboardCripto() {
     // Cargar balance total
@@ -11,16 +18,23 @@ export default function DashboardCripto() {
     if (loadingBalance || loadingBalanceDia) return <Loading_Artifys />;
     if (!balance || !balanceDia) return <div>No se encontraron datos.<RegistrarBalanceDiario /></div>;
 
+    const balanceOrdenado: Balance[] = [...balanceDia]
+    .map((balance: Balance) => {
+        const fecha = new Date(balance.fecha);
+        fecha.setDate(fecha.getDate() + 1); // Sumar un día
+        return { ...balance, fecha: fecha.toISOString().split("T")[0] }; // Mantener formato "YYYY-MM-DD"
+    })
+    .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime()); // Ordenar ascendente
+
     return (
         <>
-            <div className="mb-8 bg-gradient-to-r from-gray-800 to-indigo-900 mt-5 p-4 ">
+            <div className="mb-8 bg-gradient-to-r from-gray-800 to-indigo-900 mt-5 p-4">
                 <div className="grid grid-col-3 md:flex justify-between items-center mb-4 gap-2 mx-5">
                     <h2 className="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-pink-500 md:mb-4">
                         Dashboard Cripto
                     </h2>
                     <RegistrarBalanceDiario />
                 </div>
-
 
                 <div className="bg-gradient-to-r mb-10 from-gray-800 to-indigo-900 rounded-lg shadow-lg p-6 flex flex-col md:flex-row justify-between items-center border border-indigo-700">
                     <div>
@@ -70,8 +84,21 @@ export default function DashboardCripto() {
                     </div>
                 </div>
 
+                {/* Gráfico de línea */}
+                <div className="mb-10 bg-gradient-to-r from-gray-900 to-indigo-900 rounded-lg p-6 shadow-lg">
+                    <h3 className="text-lg font-semibold text-white mb-4">Evolución del Balance Diario</h3>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <LineChart data={balanceOrdenado}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                            <XAxis dataKey="fecha" stroke="#ccc" tickFormatter={(fecha) => new Date(fecha).toLocaleDateString()} />
+                            <YAxis stroke="#ccc" />
+                            <Tooltip labelFormatter={(fecha) => `Fecha: ${new Date(fecha).toLocaleDateString()}`} />
+                            <Line type="monotone" dataKey="balance_final" stroke="#82ca9d" strokeWidth={2} dot={{ fill: "#82ca9d" }} />
+                        </LineChart>
+                    </ResponsiveContainer>
+                </div>
 
-                <div className=" rounded-3xl overflow-x-auto bg-gradient-to-r from-indigo-950 via-purple-950 to-indigo-950">
+                <div className="rounded-3xl overflow-x-auto bg-gradient-to-r from-indigo-950 via-purple-950 to-indigo-950">
                     <table className="min-w-full table-auto border-collapse border border-gray-700">
                         <thead className="bg-indigo-800">
                             <tr>
@@ -82,7 +109,7 @@ export default function DashboardCripto() {
                         </thead>
                         <tbody>
                             {balanceDia.map((balance, index) => (
-                                <tr key={index} className=" transition duration-200 hover:bg-indigo-700">
+                                <tr key={index} className="transition duration-200 hover:bg-indigo-700">
                                     <td className="border border-gray-900 px-4 py-2 text-center text-gray-300">{balance.fecha}</td>
                                     <td className="border border-gray-900 px-4 py-2 text-center text-green-400 font-bold">
                                         ${balance.balance_final.toFixed(2)}
