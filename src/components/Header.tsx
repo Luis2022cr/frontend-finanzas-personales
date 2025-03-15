@@ -15,11 +15,11 @@ export default function Header() {
             Cuentas
           </button>
         </Link>
-        <Link to="/dashboard-futuros">
+        {/* <Link to="/dashboard-futuros">
           <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-all">
               Crypto
           </button>
-        </Link>
+        </Link> */}
         <Link to="/dashboard-deudas">
           <button className="px-4 py-2 text-sm md:text-base bg-sky-600 hover:bg-sky-700 rounded-lg transition-all">
             Deudas
