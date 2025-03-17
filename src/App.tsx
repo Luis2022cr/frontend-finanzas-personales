@@ -1,11 +1,10 @@
 
-import Login from "./pages/login";
-
+import Home from "./pages/Home";
 
 export default function App() {
   return (
     <>
-        <Login/>
+       <Home/>
     </>
   )
 }
