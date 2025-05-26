@@ -1,5 +1,5 @@
 import { useState, ChangeEvent } from "react";
-import { PlusCircle, Trash2, CreditCard, X } from "lucide-react";
+import { PlusCircle, CreditCard, X } from "lucide-react";
 import { Dialog } from "@headlessui/react";
 import Loading_Artifys from "./Loading_artifys";
 import { ObtenerCuentas } from "@/api/servicios/cuentas";
@@ -94,9 +94,9 @@ export default function Micuenta() {
                     <p className="text-2xl font-bold text-white mt-2">L. {cuenta.saldo.toLocaleString()}</p>
                   </div>
                 </div>
-                <button className="text-indigo-200 hover:text-red-300">
+                {/* <button className="text-indigo-200 hover:text-red-300">
                   <Trash2 size={18} />
-                </button>
+                </button> */}
               </div>
             </div>
           ))}

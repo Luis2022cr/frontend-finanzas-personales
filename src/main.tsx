@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import DashboardCripto from './components/cripto/dashboard-cripto-futuros';
 import DebtList from './components/deudas/deudas';
 import Login from './pages/login';
+import Trasacciones from './components/Transacciones/Transacciones';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -29,6 +30,7 @@ root.render(
             <Route path="dashboard/main" element={<Dashboard />} />
             <Route path="dashboard-futuros" element={<DashboardCripto />} />
             <Route path="dashboard-deudas" element={<DebtList />} />
+            <Route path="dashboard-deudas" element={<Trasacciones/>} />
           </Route>
 
         </Routes>
